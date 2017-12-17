@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 import os, sys
 import logging
+from zeep.exceptions import Fault
 
 logging.basicConfig(level=logging.CRITICAL)
 
@@ -112,7 +113,7 @@ def api(service):
         'masterDataService': masterDataService.client,
         'humanService': humanService.client,
         'projectsService': projectsService.client
-    }[service]()
+    }[service]().wsdl.dump()
 
 
 def sync():
@@ -182,11 +183,5 @@ def main():
             'copy': _copy,
             'move': _move
         }[sys.argv[1]](**parsed_args)
-#    except WebFault as e:
-#        try:
-#            sys.stderr.write(str(e) + '\n')
-#        except:
-#            # suds unicode bug
-#            print 'SESSION_INVALID'
-    except BaseException as e:
-        sys.stderr.write(str(e) + '\n')
+    except Fault as e:
+        sys.stderr.write(e.message)

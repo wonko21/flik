@@ -1,4 +1,4 @@
-from suds.client import Client
+from zeep import Client
 from yaml import safe_dump
 from ..common import config, storage
 from ..common.util import quote, sessionID
